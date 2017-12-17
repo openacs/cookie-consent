@@ -46,9 +46,12 @@ INSTALLATON:
 
  2) Add this package to the templating system
 
-    - OpenACS 5.10.0d2: or newer
+    - OpenACS 5.10.0d2 or newer:
       The cookie consent widgets uses the "subsite::page_plugin"
-      callback, so no changes on templates are necessary
+      callback, so no changes on templates are necessary.
+
+      However, make sure, you update also acs-bootstrap-instqller to
+      5.10.0d2 or newer to obtain the updated blank-master
 
     - OpenACS 5.9.1:
       Add to the top of your blank-master.tcl the following snippet:
