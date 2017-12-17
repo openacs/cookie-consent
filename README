@@ -1,0 +1,80 @@
+
+Integration of the Cookie Consent Library into OpenACS
+
+The Cookie Consent Library is and Cookie Consent to be free and
+open sourced library for for alerting users about the use of
+cookies on a website.  It is designed to help you comply with the
+hideous EU Cookie Law and not make you want to kill yourself in
+the process. So we made it fast, free, and relatively painless.
+
+Details:
+    https://cookieconsent.insites.com/
+    https://github.com/insites/cookieconsent/
+
+This package integrates the Consent Plugin with OpenACS,
+in particular with OpenACS subsites.
+
+So far, this package supports on the "inform" type of cookie consent
+policies. When the "opt-out" or "opt-in" variants of the policies
+should really include all types of cookies (even session-cookies)
+the user would not be able to login to the site. However,
+most countries stick for now to the "inform" policy, and the
+detailed regulation are still in flux.
+
+FEATURES:
+
+- Configure the appearance of the cookie consent widget via
+  the following parameter (on acs-subsite):
+     CookieConsentEnabled    0|1
+     CookieConsentPosition   bottom|top|pushdown|left|right
+     CookieConsentLayout     block|classic|edgeless|wire
+     CookieConsentPalette    oacs|honeybee|mono|neon|corporate
+     LearnMoreLink           https://cookiesandyou.com/
+     CookieConsentDefaultPalette
+
+- Usage from CDN (out-of-the box) or from
+  a local copy (download your local copy via
+  "Site-Wide Admin" link in /acs-admin/)
+
+- Support for host-node-mapped subsites
+- Internationalized with OpenACS message keys
+
+
+INSTALLATON:
+ 1) Install this package
+    via the OpenACS Package Manager
+
+ 2) Add this package to the templating system
+
+    - OpenACS 5.10.0d2: or newer
+      The cookie consent widgets uses the "subsite::page_plugin"
+      callback, so no changes on templates are necessary
+
+    - OpenACS 5.9.1:
+      Add to the top of your blank-master.tcl the following snippet:
+
+      ================================================================
+      if {[info commands ::cookieconsent::initialize_widget] ne ""} {
+	  ::cookieconsent::initialize_widget
+      }
+      ================================================================
+
+ 3) Configure in the parameters of the subsite (e.g. the main subsite)
+    the section "Cookie Consent"
+
+
+PREREQUIREMENTS:
+
+The implementation uses nx from the next-scripting framework.
+
+    https://next-scripting.org/xowiki/
+
+which is automatically installed for XOTcl2 via
+https://openacs.org/xowiki/naviserver-openacs
+
+It works best with OpenACS 5.10.0d2 or newer, but works as well
+with 5.9.1 (see INSTALLATION section above) or earlier versions
+supporting Content Security Policy (CSP), and probably with  
+earlier versions as well, when CSP code is commented out.
+
+

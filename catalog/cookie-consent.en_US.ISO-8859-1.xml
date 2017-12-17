@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="cookie-consent" locale="en_US" charset="ISO-8859-1">
+
+  <msg key="dismiss-button-text">Got it!</msg>
+  <msg key="message">This website uses cookies to ensure you get the best experience on our website</msg>
+  <msg key="policy-link-text">Learn more</msg>
+</message_catalog>
