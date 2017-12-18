@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="cookie-consent" locale="de_DE" charset="ISO-8859-1">
+
+  <msg key="dismiss-button-text">Verstanden</msg>
+  <msg key="message">Diese Webseite verwendet Cookies, um logins zu ermöglichen.</msg>
+  <msg key="policy-link-text">Details</msg>
+</message_catalog>

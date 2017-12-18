@@ -41,8 +41,18 @@ namespace eval ::cookieconsent {
     } {
         set dict [security::get_register_subsite]
         if {![dict exists $dict subsite_id]} {
-            set subsite_id [site_node::get_object_id \
-                                -node_id [dict get $dict host_node_id]]
+            set host_node_id [dict get $dict host_node_id]
+            if {$host_node_id == 0} {
+                #
+                # Provide compatibility with older versions of
+                # get_register_subsite, not returning the
+                # host_node_id. In such cases, we get the host_node_id
+                # via the URL
+                #
+                set node_info [site_node::get_from_url -url [dict get $dict url]]
+                set host_node_id [dict get $node_info node_id]
+            }
+            set subsite_id [site_node::get_object_id -node_id $host_node_id]
         } else {
             set subsite_id [dict get $dict subsite_id]
         }
