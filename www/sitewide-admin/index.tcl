@@ -11,14 +11,27 @@ set version $::cookieconsent::version
 #
 set version_info [::cookieconsent::version_info]
 set first_css [lindex [dict get $version_info cssFiles] 0]
-
-if {[file exists $resource_prefix/$version/$first_css]} {
-    set resources $resource_prefix/$version
-}
 set cdn [dict get $version_info cdn]
 
-set path $resource_prefix/$version
-if {![file exists $path]} {
-    catch {file mkdir $path}
+set writable 1
+if {![file isdirectory $resource_prefix]} {
+    try {
+	file mkdir $resource_prefix
+    } on error {errorMsg} {
+	set writable 0
+    }
 }
-set writable [file writable $path]
+
+if {$writable} {
+    if {[file exists $resource_prefix/$version/$first_css]} {
+	set resources $resource_prefix/$version
+    }
+    set path $resource_prefix/$version
+    if {![file exists $path]} {
+	catch {file mkdir $path}
+    }
+    set writable [file writable $path]
+} else {
+    set path $resource_prefix
+}
+
