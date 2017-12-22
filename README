@@ -1,11 +1,10 @@
 
 Integration of the Cookie Consent Library into OpenACS
 
-The Cookie Consent Library is and Cookie Consent to be free and
-open sourced library for for alerting users about the use of
-cookies on a website.  It is designed to help you comply with the
-hideous EU Cookie Law and not make you want to kill yourself in
-the process. So we made it fast, free, and relatively painless.
+The Cookie Consent Library is a free and open sourced library for for
+alerting users about the use of cookies on a website.  It is designed
+to help you comply with the hideous EU Cookie Law and can be used
+relatively painless.
 
 Details:
     https://cookieconsent.insites.com/
@@ -50,7 +49,7 @@ INSTALLATON:
       The cookie consent widgets uses the "subsite::page_plugin"
       callback, so no changes on templates are necessary.
 
-      However, make sure, you update also acs-bootstrap-instqller to
+      However, make sure, you update also acs-bootstrap-installer to
       5.10.0d2 or newer to obtain the updated blank-master
 
     - OpenACS 5.9.1:
