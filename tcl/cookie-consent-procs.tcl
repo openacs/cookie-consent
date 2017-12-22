@@ -379,6 +379,11 @@ namespace eval ::cookieconsent {
             error "directory $resource_prefix/$version is not writable"
         }
 
+       #
+        # Do we have gzip installed?
+        #
+        set gzip [::util::which gzip]
+        
         #
         # So far, everything is fine, download the
         # files. "download_file" will raise an exception, when the
@@ -389,6 +394,13 @@ namespace eval ::cookieconsent {
                           [dict get $version_info jsFiles]] {
             set fn [download_file $download_prefix/$version/$file]
             file rename -force -- $fn $resource_prefix/$version/$file
+            
+            #
+            # When gzip is available, produce a static compressed file as well
+            #
+            if {$gzip ne ""} {
+                exec $gzip -9 -k $resource_prefix/$version/$file
+            }
         }
     }
 }
