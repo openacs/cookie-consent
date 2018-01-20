@@ -5,6 +5,15 @@ set resource_prefix [acs_package_root_dir cookie-consent/www/resources]
 set what "Cookie Consent Widget"
 set version $::cookieconsent::version
 
+
+if {$::tcl_version eq "8.5"} {
+    #
+    # In Tcl 8.5, "::try" was not yet a builtin of Tcl
+    #
+    package require try 
+}
+
+
 #
 # Get version info about the resource files of this package. If not
 # locally installed, offer a link for download.
