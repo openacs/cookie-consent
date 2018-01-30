@@ -225,9 +225,17 @@ namespace eval ::cookieconsent {
                            -package_id $subsite_id \
                            -parameter CookieConsentEnabled \
                            -default 0]
-        if {$enabled_p} {
+
+        #
+        # Just do real initialization, when the cookie is NOT set.
+        # When more complex interactions are defined, this has to be
+        # reconsidered.
+        #
+        set cookie_set [ad_get_cookie "cookieconsent_status-$subsite_id" ""]
+        
+        if {$enabled_p && $cookie_set eq ""} {
             #
-            # Create an instance of the widget class from all configuration options
+            # Create an instance of the consent widget class from all configuration options
             #
             foreach {param default} {
                 Layout         block
