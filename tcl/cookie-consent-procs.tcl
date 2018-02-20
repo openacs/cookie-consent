@@ -217,6 +217,13 @@ namespace eval ::cookieconsent {
         Initialize an cookie-consent widget.
 
     } {
+        if {[ns_conn isconnected]} {
+            #
+            # If called in error cases, do nothing
+            #
+            return
+        }
+        
         if {$subsite_id eq ""} {
             set subsite_id [get_relevant_subsite]
         }
