@@ -217,7 +217,7 @@ namespace eval ::cookieconsent {
         Initialize an cookie-consent widget.
 
     } {
-        if {[ns_conn isconnected]} {
+        if {![ns_conn isconnected]} {
             #
             # If called in error cases, do nothing
             #
