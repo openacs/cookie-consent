@@ -347,7 +347,7 @@ namespace eval ::cookieconsent {
 
     ad_proc -private download_file {url} {
         #
-        # Helper to download from an URL and to raise exception, when
+        # Helper to download from a URL and to raise exception, when
         # download fails.
         #
     } {
