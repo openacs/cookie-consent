@@ -8,7 +8,7 @@ set version $::cookieconsent::version
 
 if {$::tcl_version eq "8.5"} {
     #
-    # In Tcl 8.5, "::try" was not yet a builtin of Tcl
+    # In Tcl 8.5, "::try" was not yet a built-in of Tcl
     #
     package require try 
 }
