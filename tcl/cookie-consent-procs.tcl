@@ -217,13 +217,19 @@ namespace eval ::cookieconsent {
         Initialize an cookie-consent widget.
 
     } {
-        if {![ns_conn isconnected]} {
+        if {[catch {ns_conn content}]} {
             #
-            # If called in error cases, do nothing
+            # If the connection is already closed, do nothing.
+            #
+            # "ns_conn content" will raise an exception, when the
+            # connection is already closed. This is not obivous
+            # without deeper knowledge. Therefore, NaviServer needs
+            # probably a "ns_conn closed" flag the check for such
+            # situations in a more self-expanatory way.
             #
             return
         }
-        
+
         if {$subsite_id eq ""} {
             set subsite_id [get_relevant_subsite]
         }
@@ -239,7 +245,7 @@ namespace eval ::cookieconsent {
         # reconsidered.
         #
         set cookie_set [ad_get_cookie "cookieconsent_status-$subsite_id" ""]
-        
+
         if {$enabled_p && $cookie_set eq ""} {
             #
             # Create an instance of the consent widget class from all configuration options
@@ -398,7 +404,7 @@ namespace eval ::cookieconsent {
         # Do we have gzip installed?
         #
         set gzip [::util::which gzip]
-        
+
         #
         # So far, everything is fine, download the
         # files. "download_file" will raise an exception, when the
@@ -409,7 +415,7 @@ namespace eval ::cookieconsent {
                           [dict get $version_info jsFiles]] {
             set fn [download_file $download_prefix/$version/$file]
             file rename -force -- $fn $resource_prefix/$version/$file
-            
+
             #
             # When gzip is available, produce a static compressed file as well
             #
