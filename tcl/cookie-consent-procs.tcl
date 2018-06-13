@@ -3,7 +3,7 @@ ad_library {
     Integration of the Cookie Consent Library into OpenACS
 
     The Cookie Consent Library is and Cookie Consent to be free and
-    open sourced library for for alerting users about the use of
+    open sourced library for alerting users about the use of
     cookies on a website.  It is designed to help you comply with the
     hideous EU Cookie Law and not make you want to kill yourself in
     the process. So we made it fast, free, and relatively painless.
