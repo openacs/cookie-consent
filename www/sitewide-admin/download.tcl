@@ -6,5 +6,11 @@ ad_page_contract {
     {version:word,notnull ""}
 }
 
-::cookieconsent::download -version $version
+if {$version eq ""} {
+    set version $::cookieconsent::version
+}
+::util::resources::download \
+    -version_dir $version \
+    -resource_info [::cookieconsent::resource_info]
+
 ad_returnredirect .

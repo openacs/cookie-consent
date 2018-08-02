@@ -238,7 +238,6 @@ namespace eval ::cookieconsent {
                            -package_id $subsite_id \
                            -parameter CookieConsentEnabled \
                            -default 0]
-
         #
         # Just do real initialization, when the cookie is NOT set.
         # When more complex interactions are defined, this has to be
@@ -280,7 +279,7 @@ namespace eval ::cookieconsent {
     }
 
 
-    ad_proc version_info {
+    ad_proc resource_info {
         {-version ""}
     } {
 
@@ -288,20 +287,21 @@ namespace eval ::cookieconsent {
         cookieconsent packages, either from the local file system, or
         from CDN.
 
+        @return dict containing cdn, cdnHost, resourceDir, prefix, cssFiles, jsFiles and extraFiles.
     } {
         #
         # If no version of the cookie consent library was specified,
         # use the name-spaced variable as default.
         #
         if {$version eq ""} {
-            set version ${::cookieconsent::version}
+            set version $::cookieconsent::version
         }
 
         #
         # Provide paths for loading either via resources or CDN
         #
-        set resource_prefix [acs_package_root_dir cookie-consent/www/resources]
-        set cdn             "//cdnjs.cloudflare.com/ajax/libs"
+        set resourceDir [acs_package_root_dir cookie-consent/www/resources]
+        set cdn         "//cdnjs.cloudflare.com/ajax/libs"
 
         #
         # If the resources are not available locally, these will be
@@ -309,17 +309,21 @@ namespace eval ::cookieconsent {
         # The returned "prefix" indicates the place, from where the
         # resource will be loaded.
         #
-        if {[file exists $resource_prefix/$version]} {
+        if {[file exists $resourceDir/$version]} {
             set prefix /resources/cookie-consent/$version/
+            set cdnHost ""
         } else {
             set prefix $cdn/$version/
-            lappend result host "cdnjs.cloudflare.com"
+            set cdnHost cdnjs.cloudflare.com
         }
         lappend result \
+            resourceDir $resourceDir \
             cdn $cdn \
+            cdnHost $cdnHost \
             prefix $prefix \
-            cssFiles [list cookieconsent.min.css] \
-            jsFiles  [list cookieconsent.min.js]
+            cssFiles {cookieconsent.min.css} \
+            jsFiles  {cookieconsent.min.js} \
+            extraFiles {}
 
         return $result
     }
@@ -332,98 +336,24 @@ namespace eval ::cookieconsent {
         Add the necessary CSS, JavaScript and CSP to the current
         page.
     } {
-        set version_info [version_info -version $version]
+        set resource_info [resource_info -version $version]
 
-        if {[dict exists $version_info host]} {
-            security::csp::require script-src [dict get $version_info host]
-            security::csp::require style-src [dict get $version_info host]
+        if {[dict exists $resource_info cdnHost] && [dict get $resource_info cdnHost] ne ""} {
+            security::csp::require script-src [dict get $resource_info cdnHost]
+            security::csp::require style-src [dict get $resource_info cdnHost]
         }
-        set prefix [dict get $version_info prefix]
+        set prefix [dict get $resource_info prefix]
 
-        foreach cssFile [dict get $version_info cssFiles] {
+        foreach cssFile [dict get $resource_info cssFiles] {
             template::head::add_css -href $prefix/$cssFile
         }
-        foreach jsFile [dict get $version_info jsFiles] {
+        foreach jsFile [dict get $resource_info jsFiles] {
             template::head::add_javascript -src $prefix/$jsFile
         }
 
         ::template::add_body_script -script [$object render_js]
     }
 
-
-    ad_proc -private download_file {url} {
-        #
-        # Helper to download from a URL and to raise exception, when
-        # download fails.
-        #
-    } {
-        set result [util::http::get -url $url -spool]
-        if {[dict get $result status] == 200} {
-            set fn [dict get $result file]
-            return $fn
-        } else {
-            error "download from $url failed: $result"
-        }
-    }
-
-
-    ad_proc download {
-        {-version ""}
-    } {
-
-        Download a version of the cookie consent library
-        it into a directory structure similar to the CDN structure to
-        allow installation of multiple versions. When the local
-        structure is available, it will be used by initialize_widget.
-
-    } {
-        #
-        # If no version is explicitly specified, use the name-spaced
-        # variable as default.
-        #
-        if {$version eq ""} {
-            set version ${::cookieconsent::version}
-        }
-
-        set version_info [version_info -version $version]
-
-        set download_prefix https:[dict get $version_info cdn]
-        set resource_prefix [acs_package_root_dir cookie-consent/www/resources/]
-
-        #
-        # Do we have a writable output directory under resources?
-        #
-        if {![file isdirectory $resource_prefix/$version]} {
-            file mkdir $resource_prefix/$version
-        }
-        if {![file writable $resource_prefix/$version]} {
-            error "directory $resource_prefix/$version is not writable"
-        }
-
-       #
-        # Do we have gzip installed?
-        #
-        set gzip [::util::which gzip]
-
-        #
-        # So far, everything is fine, download the
-        # files. "download_file" will raise an exception, when the
-        # download fails.
-        #
-        foreach file [concat \
-                          [dict get $version_info cssFiles] \
-                          [dict get $version_info jsFiles]] {
-            set fn [download_file $download_prefix/$version/$file]
-            file rename -force -- $fn $resource_prefix/$version/$file
-
-            #
-            # When gzip is available, produce a static compressed file as well
-            #
-            if {$gzip ne ""} {
-                exec $gzip -9 -k $resource_prefix/$version/$file
-            }
-        }
-    }
 }
 
 # Local variables:

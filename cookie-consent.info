@@ -9,8 +9,7 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>f</inherit-templates-p>
     
-    <version name="0.3"
-	     url="http://openacs.org/repository/download/apm/cookie-consent-0.3.apm">
+    <version name="0.4" url="http://openacs.org/repository/download/apm/cookie-consent-0.4.apm">
         <owner url="mailto:neumann@wu-wien.ac.at">Gustaf Neumann</owner>
         <summary>Cookie Consent Widget based on the free
 	Cookie Consent Library</summary>
@@ -18,9 +17,9 @@
 	<license>MIT License</license>
         <maturity>0</maturity>
 
-        <provides url="cookie-consent" version="0.3"/>
+        <provides url="cookie-consent" version="0.4"/>
         <requires url="acs-templating" version="5.9.1"/>
-        <requires url="acs-tcl" version="5.9.1"/>
+        <requires url="acs-tcl" version="5.10.0d17"/>
 
 	<callbacks>
           <callback type="before-uninstall"  proc="::cookieconsent::before-uninstall"/>
