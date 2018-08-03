@@ -287,7 +287,8 @@ namespace eval ::cookieconsent {
         cookieconsent packages, either from the local file system, or
         from CDN.
 
-        @return dict containing cdn, cdnHost, resourceDir, prefix, cssFiles, jsFiles and extraFiles.
+	@return dict containing resourceDir, resourceName, cdn,
+	        cdnHost, prefix, cssFiles, jsFiles and extraFiles.
     } {
         #
         # If no version of the cookie consent library was specified,
@@ -317,6 +318,7 @@ namespace eval ::cookieconsent {
             set cdnHost cdnjs.cloudflare.com
         }
         lappend result \
+            resourceName "Cookie Consent Widget" \
             resourceDir $resourceDir \
             cdn $cdn \
             cdnHost $cdnHost \
