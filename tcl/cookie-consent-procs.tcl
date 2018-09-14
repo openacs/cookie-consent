@@ -96,6 +96,9 @@ namespace eval ::cookieconsent {
         :property {subsite_id:required}
 
         :public method render_js {} {
+            #
+            # Perform the actual rendering of the cookie consent widget.
+            #
 
             set static false
             if {${:position} eq "pushdown"} {
