@@ -217,7 +217,7 @@ namespace eval ::cookieconsent {
         {-subsite_id ""}
     } {
 
-        Initialize an cookie-consent widget.
+        Initialize a cookie-consent widget.
 
     } {
         if {[catch {ns_conn content}]} {
