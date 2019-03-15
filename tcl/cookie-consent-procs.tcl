@@ -225,7 +225,7 @@ namespace eval ::cookieconsent {
             # If the connection is already closed, do nothing.
             #
             # "ns_conn content" will raise an exception, when the
-            # connection is already closed. This is not obivous
+            # connection is already closed. This is not obvious
             # without deeper knowledge. Therefore, NaviServer needs
             # probably a "ns_conn closed" flag the check for such
             # situations in a more self-expanatory way.
