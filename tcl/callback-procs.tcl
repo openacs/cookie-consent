@@ -42,6 +42,9 @@ namespace eval ::cookieconsent {
 	    "Default style: use the following settings, when CookieConsentPalette is set to 'default'"
 	    "popup {text #fff background #004570} button {text #000 background #f1d600}" "string"
 
+	    "ExpiryDays"
+	    "Lifetime of the cookie"
+	    "365" "number"
 	} {
 	    apm_parameter_register "CookieConsent$name" \
 		$description "acs-subsite" $default $datatype "Cookie Consent"
@@ -59,6 +62,7 @@ namespace eval ::cookieconsent {
 	    Palette
 	    Position
 	    DefaultPalette
+	    ExpiryDays
 	} {
 	    ns_log notice [list apm_parameter_unregister \
 			       -parameter "CookieConsent$parameter" \

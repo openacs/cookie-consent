@@ -29,13 +29,12 @@ namespace eval ::cookieconsent {
     # widget also via NaviServer config file:
     #
     #   ns_section ns/server/${server}/acs/cookie-consent
-    #      ns_param version cookieconsent2/3.0.3
-    #
+    #      ns_param version                     cookieconsent2/3.1.0
 
-    set version [parameter::get \
-                     -package_id $package_id \
-                     -parameter Version \
-                     -default cookieconsent2/3.0.3]
+    set ::cookieconsent::version [parameter::get \
+                                      -package_id $package_id \
+                                      -parameter Version \
+                                      -default cookieconsent2/3.1.0]
 
     ad_proc -private get_relevant_subsite {} {
     } {
@@ -87,6 +86,7 @@ namespace eval ::cookieconsent {
         :property {palette              default} ;# default|oacs|honeybee|mono|neon|corporate
         :property {learn-more-link      https://cookiesandyou.com/}
         :property {default-palette      {popup {text #fff background #004570} button {text #000 background #f1d600}}}
+        :property {expiryDays:integer   365}
 
         :property {compliance-type      inform}  ;# inform|opt-out|opt-in
         :property {message-text        "#cookie-consent.message#"}
@@ -193,7 +193,7 @@ namespace eval ::cookieconsent {
                             "name":       "$cookie_name",
                             "path":       "/",
                             "domain":     "",
-                            "expiryDays": "365"
+                            "expiryDays": "${:expiryDays}"
                         },
                         "theme":    "$theme",
                         "position": "$position",
@@ -220,15 +220,9 @@ namespace eval ::cookieconsent {
         Initialize a cookie-consent widget.
 
     } {
-        if {[catch {ns_conn content}]} {
+        if {[ns_conn isconnected]} {
             #
             # If the connection is already closed, do nothing.
-            #
-            # "ns_conn content" will raise an exception, when the
-            # connection is already closed. This is not obvious
-            # without deeper knowledge. Therefore, NaviServer needs
-            # probably a "ns_conn closed" flag the check for such
-            # situations in a more self-expanatory way.
             #
             return
         }
@@ -253,6 +247,7 @@ namespace eval ::cookieconsent {
             # Create an instance of the consent widget class from all configuration options
             #
             foreach {param default} {
+                ExpiryDays     365
                 Layout         block
                 Palette        oacs
                 Position       bottom
@@ -267,6 +262,7 @@ namespace eval ::cookieconsent {
 
             set c [CookieConsent new \
                        -subsite_id      $subsite_id \
+                       -expiryDays      $p(ExpiryDays) \
                        -position        $p(Position) \
                        -palette         $p(Palette) \
                        -layout          $p(Layout) \
@@ -290,8 +286,8 @@ namespace eval ::cookieconsent {
         cookieconsent packages, either from the local file system, or
         from CDN.
 
-	@return dict containing resourceDir, resourceName, cdn,
-	        cdnHost, prefix, cssFiles, jsFiles and extraFiles.
+        @return dict containing resourceDir, resourceName, cdn,
+                cdnHost, prefix, cssFiles, jsFiles and extraFiles.
     } {
         #
         # If no version of the cookie consent library was specified,
