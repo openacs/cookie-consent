@@ -220,7 +220,7 @@ namespace eval ::cookieconsent {
         Initialize a cookie-consent widget.
 
     } {
-        if {[ns_conn isconnected]} {
+        if {![ns_conn isconnected]} {
             #
             # If the connection is already closed, do nothing.
             #
