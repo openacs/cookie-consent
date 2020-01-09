@@ -22,7 +22,7 @@ ad_library {
 
 namespace eval ::cookieconsent {
 
-    set package_id [apm_package_id_from_key "cookieconsent"]
+    set package_id [apm_package_id_from_key "cookie-consent"]
 
     #
     # It is possible to configure the version of the cookie consent
