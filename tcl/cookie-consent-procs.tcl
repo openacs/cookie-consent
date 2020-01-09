@@ -29,7 +29,7 @@ namespace eval ::cookieconsent {
     # widget also via NaviServer config file:
     #
     #   ns_section ns/server/${server}/acs/cookie-consent
-    #      ns_param version                     cookieconsent2/3.1.0
+    #      ns_param Version                     cookieconsent2/3.1.0
 
     set ::cookieconsent::version [parameter::get \
                                       -package_id $package_id \
