@@ -283,7 +283,7 @@ namespace eval ::cookieconsent {
     } {
 
         Get information about available version(s) of the
-        cookieconsent packages, either from the local file system, or
+        cookieconsent packages, either from the local filesystem, or
         from CDN.
 
         @return dict containing resourceDir, resourceName, cdn,
