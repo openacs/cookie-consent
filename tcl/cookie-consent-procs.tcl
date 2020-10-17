@@ -29,12 +29,12 @@ namespace eval ::cookieconsent {
     # widget also via NaviServer config file:
     #
     #   ns_section ns/server/${server}/acs/cookie-consent
-    #      ns_param Version                     cookieconsent2/3.1.0
+    #      ns_param Version                     cookieconsent2/3.1.1
 
     set ::cookieconsent::version [parameter::get \
                                       -package_id $package_id \
                                       -parameter Version \
-                                      -default cookieconsent2/3.1.0]
+                                      -default cookieconsent2/3.1.1]
 
     ad_proc -private get_relevant_subsite {} {
     } {
@@ -242,7 +242,7 @@ namespace eval ::cookieconsent {
         #
         set cookie_set [ad_get_cookie "cookieconsent_status-$subsite_id" ""]
 
-        if {$enabled_p && $cookie_set eq ""} {
+        if {$enabled_p && $cookie_set eq "" && ![ad_conn bot_p]} {
             #
             # Create an instance of the consent widget class from all configuration options
             #
