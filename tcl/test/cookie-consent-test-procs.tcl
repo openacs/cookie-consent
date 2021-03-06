@@ -2,7 +2,7 @@ ad_library {
 
     Tests for cookie consent widget
 
-    @author Gustar Neumann
+    @author Gustaf Neumann
     @creation-date 2021-03-06
 }
 
