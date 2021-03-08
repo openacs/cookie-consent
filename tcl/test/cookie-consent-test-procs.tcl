@@ -12,7 +12,7 @@ aa_register_case \
         ad_conn
         ad_get_cookie
         ad_set_cookie
-        cookieconsent::CookieConsent instproc render_js
+        "cookieconsent::CookieConsent instproc render_js"
         cookieconsent::add_to_page
         cookieconsent::initialize_widget
         cookieconsent::reset_cookie
