@@ -193,6 +193,7 @@ namespace eval ::cookieconsent {
                             "name":       "$cookie_name",
                             "path":       "/",
                             "domain":     "",
+                            "samesite":   "lax",                            
                             "expiryDays": "${:expiryDays}"
                         },
                         "theme":    "$theme",
