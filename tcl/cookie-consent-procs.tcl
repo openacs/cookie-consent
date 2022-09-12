@@ -71,16 +71,16 @@ namespace eval ::cookieconsent {
         ad_unset_cookie "cookieconsent_status-$subsite_id"
     }
 
-    #
-    # Create the Class for configuring the cookie consent widget.
-    # This class requires nx from the next-scripting framework.
-    #
-    #     https://next-scripting.org/xowiki/
-    #
-    # which is automatically installed for XOTcl2 via
-    # https://openacs.org/xowiki/naviserver-openacs
-    #
     nx::Class create CookieConsent {
+        #
+        # Create the Class for configuring the cookie consent widget.
+        # This class requires nx from the next-scripting framework.
+        #
+        #     https://next-scripting.org/xowiki/
+        #
+        # which is automatically installed for XOTcl2 via
+        # https://openacs.org/xowiki/naviserver-openacs
+        #
         :property {position             pushdown};# bottom|top|pushdown|left|right
         :property {layout               block}   ;# block|classic|edgeless|wire
         :property {palette              default} ;# default|oacs|honeybee|mono|neon|corporate
