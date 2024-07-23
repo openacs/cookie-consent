@@ -29,12 +29,12 @@ namespace eval ::cookieconsent {
     # widget also via NaviServer config file:
     #
     #   ns_section ns/server/${server}/acs/cookie-consent
-    #      ns_param Version                     cookieconsent2/3.1.1
+    #      ns_param Version                     3.1.1
 
     set ::cookieconsent::version [parameter::get \
                                       -package_id $package_id \
                                       -parameter Version \
-                                      -default cookieconsent2/3.1.1]
+                                      -default 3.1.1]
 
     ad_proc -private get_relevant_subsite {} {
     } {
@@ -193,7 +193,7 @@ namespace eval ::cookieconsent {
                             "name":       "$cookie_name",
                             "path":       "/",
                             "domain":     "",
-                            "samesite":   "lax",                            
+                            "samesite":   "lax",
                             "expiryDays": "${:expiryDays}"
                         },
                         "theme":    "$theme",
@@ -325,7 +325,10 @@ namespace eval ::cookieconsent {
             prefix $prefix \
             cssFiles {cookieconsent.min.css} \
             jsFiles  {cookieconsent.min.js} \
-            extraFiles {}
+            extraFiles {} \
+            versionCheckURL https://cdnjs.com/libraries/cookieconsent2 \
+            versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
+            installedVersion $version
 
         return $result
     }
