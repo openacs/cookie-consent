@@ -301,8 +301,13 @@ namespace eval ::cookieconsent {
         #
         # Provide paths for loading either via resources or CDN
         #
+        #   "resourceDir" is the absolute path in the filesystem
+        #   "resourceUrl" is the URL path provided to the request processor
+        #   "versionDir" is the version-specific element both in the
+        #                URL and in the filesystem.
+        
         set resourceDir [acs_package_root_dir cookie-consent/www/resources]
-        set cdn         "//cdnjs.cloudflare.com/ajax/libs"
+        set cdn         "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2"
 
         #
         # If the resources are not available locally, these will be
@@ -328,6 +333,7 @@ namespace eval ::cookieconsent {
             extraFiles {} \
             versionCheckURL https://cdnjs.com/libraries/cookieconsent2 \
             versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
+            vulnerabilityCheckURL https://snyk.io/advisor/npm-package/cookieconsent \
             installedVersion $version
 
         return $result

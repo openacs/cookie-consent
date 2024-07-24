@@ -79,6 +79,42 @@ namespace eval ::cookieconsent {
         }
     }
 
+    ad_proc -private after-upgrade {
+        -from_version_name
+        -to_version_name
+    } {
+        After-upgrade callback.
+    } {
+        apm_upgrade_logic \
+            -from_version_name $from_version_name \
+            -to_version_name $to_version_name \
+            -spec {
+                0.7 0.8 {
+                    foreach package_id [apm_package_ids_from_key -package_key cookie-consent] {
+                        set old_value [parameter::get -package_id $package_id -parameter Version]
+                        ns_log notice \
+                            "cookie-conset: after upgrade: check parameter 'Version'" \
+                            "of package_id $package_id has value '$old_value'"
+
+                        set new_value $old_value
+                        regsub {cookieconsent2/} $old_value "" new_value
+
+                        if {$old_value ne $new_value} {
+                            parameter::set_value \
+                                -package_id $package_id \
+                                -parameter Version \
+                                -value $new_value
+
+                            ns_log notice \
+                                "cookie-conset: after upgrade: parameter 'Version'" \
+                                "of package_id $package_id" \
+                                "changed from '$old_value' to '$new_value'"
+
+                        }
+                    }
+                }
+            }
+    }
 
     #
     # Register a "page_plugin" callback for the subsite. In case, this
