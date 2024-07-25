@@ -331,9 +331,8 @@ namespace eval ::cookieconsent {
             cssFiles {cookieconsent.min.css} \
             jsFiles  {cookieconsent.min.js} \
             extraFiles {} \
-            versionCheckURL https://cdnjs.com/libraries/cookieconsent2 \
             versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
-            vulnerabilityCheckURL https://snyk.io/advisor/npm-package/cookieconsent \
+            vulnerabilityCheck {service snyk library cookieconsent2} \
             installedVersion $version
 
         return $result
