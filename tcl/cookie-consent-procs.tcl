@@ -303,7 +303,7 @@ namespace eval ::cookieconsent {
         #
         #   "resourceDir" is the absolute path in the filesystem
         #   "resourceUrl" is the URL path provided to the request processor
-        #   "versionDir" is the version-specific element both in the
+        #   "versionSegment" is the version-specific element both in the
         #                URL and in the filesystem.
         
         set resourceDir [acs_package_root_dir cookie-consent/www/resources]
