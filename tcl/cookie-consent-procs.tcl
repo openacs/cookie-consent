@@ -302,7 +302,6 @@ namespace eval ::cookieconsent {
         # Provide paths for loading either via resources or CDN
         #
         #   "resourceDir" is the absolute path in the filesystem
-        #   "resourceUrl" is the URL path provided to the request processor
         #   "versionSegment" is the version-specific element both in the
         #                URL and in the filesystem.
         
