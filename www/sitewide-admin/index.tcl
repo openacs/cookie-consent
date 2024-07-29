@@ -6,7 +6,7 @@ ad_page_contract {
 }
 
 set resource_info [::cookieconsent::resource_info]
-set version [dict get $resource_info installedVersion]
+set version [dict get $resource_info configuredVersion]
 
 set title "[dict get $resource_info resourceName] - Sitewide Admin"
 set context [list $title]

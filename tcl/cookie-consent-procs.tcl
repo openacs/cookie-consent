@@ -332,7 +332,7 @@ namespace eval ::cookieconsent {
             extraFiles {} \
             versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
             vulnerabilityCheck {service snyk library cookieconsent2} \
-            installedVersion $version
+            configuredVersion $version
 
         return $result
     }
