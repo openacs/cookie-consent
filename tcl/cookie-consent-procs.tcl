@@ -21,9 +21,7 @@ ad_library {
 }
 
 namespace eval ::cookieconsent {
-
-    set package_id [apm_package_id_from_key "cookie-consent"]
-
+    variable parameter_info
     #
     # It is possible to configure the version of the cookie consent
     # widget also via NaviServer config file:
@@ -31,10 +29,11 @@ namespace eval ::cookieconsent {
     #   ns_section ns/server/${server}/acs/cookie-consent
     #      ns_param Version                     3.1.1
 
-    set ::cookieconsent::version [parameter::get \
-                                      -package_id $package_id \
-                                      -parameter Version \
-                                      -default 3.1.1]
+    set parameter_info {
+        package_key cookie-consent
+        parameter_name Version
+        default_value 3.1.1
+    }
 
     ad_proc -private get_relevant_subsite {} {
     } {
@@ -290,12 +289,18 @@ namespace eval ::cookieconsent {
         @return dict containing resourceDir, resourceName, cdn,
                 cdnHost, prefix, cssFiles, jsFiles and extraFiles.
     } {
+        variable parameter_info
         #
         # If no version of the cookie consent library was specified,
         # use the name-spaced variable as default.
         #
         if {$version eq ""} {
-            set version $::cookieconsent::version
+            dict with parameter_info {
+                set version [::parameter::get_global_value \
+                                 -package_key $package_key \
+                                 -parameter $parameter_name \
+                                 -default $default_value]
+            }
         }
 
         #
@@ -304,7 +309,7 @@ namespace eval ::cookieconsent {
         #   "resourceDir" is the absolute path in the filesystem
         #   "versionSegment" is the version-specific element both in the
         #                URL and in the filesystem.
-        
+
         set resourceDir [acs_package_root_dir cookie-consent/www/resources]
         set cdn         "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2"
 
@@ -332,6 +337,7 @@ namespace eval ::cookieconsent {
             extraFiles {} \
             versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
             vulnerabilityCheck {service snyk library cookieconsent2} \
+            parameterInfo $parameter_info \
             configuredVersion $version
 
         return $result
