@@ -311,7 +311,7 @@ namespace eval ::cookieconsent {
         #                URL and in the filesystem.
 
         set resourceDir [acs_package_root_dir cookie-consent/www/resources]
-        set cdn         "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2"
+        set cdn         //cdnjs.cloudflare.com/ajax/libs/cookieconsent2
 
         #
         # If the resources are not available locally, these will be
