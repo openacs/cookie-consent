@@ -13,13 +13,13 @@
         <owner url="mailto:neumann@wu-wien.ac.at">Gustaf Neumann</owner>
         <summary>Cookie Consent Widget based on the free
 	Cookie Consent Library</summary>
-        <release-date>2021-09-16</release-date>
+        <release-date>2024-09-02</release-date>
 	<license>MIT License</license>
         <maturity>1</maturity>
 
         <provides url="cookie-consent" version="0.10"/>
-        <requires url="acs-templating" version="5.10.1b1"/>
-        <requires url="acs-tcl" version="5.10.1b5"/>
+        <requires url="acs-templating" version="5.10.1"/>
+        <requires url="acs-tcl" version="5.10.1"/>
 
 	<callbacks>
           <callback type="before-uninstall"  proc="::cookieconsent::before-uninstall"/>
