@@ -9,29 +9,23 @@
     <implements-subsite-p>f</implements-subsite-p>
     <inherit-templates-p>f</inherit-templates-p>
     
-    <version name="0.5" url="http://openacs.org/repository/download/apm/cookie-consent-0.5.apm">
+    <version name="0.10" url="http://openacs.org/repository/download/apm/cookie-consent-0.10.apm">
         <owner url="mailto:neumann@wu-wien.ac.at">Gustaf Neumann</owner>
         <summary>Cookie Consent Widget based on the free
 	Cookie Consent Library</summary>
-        <release-date>2017-12-13</release-date>
+        <release-date>2024-09-02</release-date>
 	<license>MIT License</license>
-        <maturity>0</maturity>
+        <maturity>1</maturity>
 
-        <provides url="cookie-consent" version="0.5"/>
-        <requires url="acs-templating" version="5.9.1"/>
-        <requires url="acs-tcl" version="5.10.0d18"/>
+        <provides url="cookie-consent" version="0.10"/>
+        <requires url="acs-templating" version="5.10.1"/>
+        <requires url="acs-tcl" version="5.10.1"/>
 
 	<callbacks>
           <callback type="before-uninstall"  proc="::cookieconsent::before-uninstall"/>
-          <callback type="after-install"  proc="::cookieconsent::after-install"/>
+          <callback type="after-install" proc="::cookieconsent::after-install"/>
+          <callback type="after-upgrade"  proc="::cookieconsent::after-upgrade"/>
         </callbacks>
-
-        <parameters>
-            <parameter scope="instance" datatype="string"
-		       min_n_values="1"  max_n_values="1"
-		       name="Version"  default="cookieconsent2/3.0.3"
-		       description="Version of the cookie-consent library, e.g.: cookieconsent2/3.0.3"/>
-        </parameters>
 
     </version>
 </package>

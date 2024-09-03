@@ -21,21 +21,19 @@ ad_library {
 }
 
 namespace eval ::cookieconsent {
-
-    set package_id [apm_package_id_from_key "cookieconsent"]
-
+    variable parameter_info
     #
     # It is possible to configure the version of the cookie consent
     # widget also via NaviServer config file:
     #
     #   ns_section ns/server/${server}/acs/cookie-consent
-    #      ns_param version cookieconsent2/3.0.3
-    #
+    #      ns_param Version                     3.1.1
 
-    set version [parameter::get \
-                     -package_id $package_id \
-                     -parameter Version \
-                     -default cookieconsent2/3.0.3]
+    set parameter_info {
+        package_key cookie-consent
+        parameter_name Version
+        default_value 3.1.1
+    }
 
     ad_proc -private get_relevant_subsite {} {
     } {
@@ -72,21 +70,22 @@ namespace eval ::cookieconsent {
         ad_unset_cookie "cookieconsent_status-$subsite_id"
     }
 
-    #
-    # Create the Class for configuring the cookie consent widget.
-    # This class requires nx from the next-scripting framework.
-    #
-    #     https://next-scripting.org/xowiki/
-    #
-    # which is automatically installed for XOTcl2 via
-    # https://openacs.org/xowiki/naviserver-openacs
-    #
     nx::Class create CookieConsent {
+        #
+        # Create the Class for configuring the cookie consent widget.
+        # This class requires nx from the next-scripting framework.
+        #
+        #     https://next-scripting.org/xowiki/
+        #
+        # which is automatically installed for XOTcl2 via
+        # https://openacs.org/xowiki/naviserver-openacs
+        #
         :property {position             pushdown};# bottom|top|pushdown|left|right
         :property {layout               block}   ;# block|classic|edgeless|wire
         :property {palette              default} ;# default|oacs|honeybee|mono|neon|corporate
         :property {learn-more-link      https://cookiesandyou.com/}
         :property {default-palette      {popup {text #fff background #004570} button {text #000 background #f1d600}}}
+        :property {expiryDays:integer   365}
 
         :property {compliance-type      inform}  ;# inform|opt-out|opt-in
         :property {message-text        "#cookie-consent.message#"}
@@ -193,7 +192,8 @@ namespace eval ::cookieconsent {
                             "name":       "$cookie_name",
                             "path":       "/",
                             "domain":     "",
-                            "expiryDays": "365"
+                            "samesite":   "lax",
+                            "expiryDays": "${:expiryDays}"
                         },
                         "theme":    "$theme",
                         "position": "$position",
@@ -217,18 +217,12 @@ namespace eval ::cookieconsent {
         {-subsite_id ""}
     } {
 
-        Initialize an cookie-consent widget.
+        Initialize a cookie-consent widget.
 
     } {
-        if {[catch {ns_conn content}]} {
+        if {![ns_conn isconnected]} {
             #
             # If the connection is already closed, do nothing.
-            #
-            # "ns_conn content" will raise an exception, when the
-            # connection is already closed. This is not obivous
-            # without deeper knowledge. Therefore, NaviServer needs
-            # probably a "ns_conn closed" flag the check for such
-            # situations in a more self-expanatory way.
             #
             return
         }
@@ -248,11 +242,12 @@ namespace eval ::cookieconsent {
         #
         set cookie_set [ad_get_cookie "cookieconsent_status-$subsite_id" ""]
 
-        if {$enabled_p && $cookie_set eq ""} {
+        if {$enabled_p && $cookie_set eq "" && ![ad_conn bot_p]} {
             #
             # Create an instance of the consent widget class from all configuration options
             #
             foreach {param default} {
+                ExpiryDays     365
                 Layout         block
                 Palette        oacs
                 Position       bottom
@@ -267,6 +262,7 @@ namespace eval ::cookieconsent {
 
             set c [CookieConsent new \
                        -subsite_id      $subsite_id \
+                       -expiryDays      $p(ExpiryDays) \
                        -position        $p(Position) \
                        -palette         $p(Palette) \
                        -layout          $p(Layout) \
@@ -287,25 +283,35 @@ namespace eval ::cookieconsent {
     } {
 
         Get information about available version(s) of the
-        cookieconsent packages, either from the local file system, or
+        cookieconsent packages, either from the local filesystem, or
         from CDN.
 
-	@return dict containing resourceDir, resourceName, cdn,
-	        cdnHost, prefix, cssFiles, jsFiles and extraFiles.
+        @return dict containing resourceDir, resourceName, cdn,
+                cdnHost, prefix, cssFiles, jsFiles and extraFiles.
     } {
+        variable parameter_info
         #
         # If no version of the cookie consent library was specified,
         # use the name-spaced variable as default.
         #
         if {$version eq ""} {
-            set version $::cookieconsent::version
+            dict with parameter_info {
+                set version [::parameter::get_global_value \
+                                 -package_key $package_key \
+                                 -parameter $parameter_name \
+                                 -default $default_value]
+            }
         }
 
         #
         # Provide paths for loading either via resources or CDN
         #
+        #   "resourceDir" is the absolute path in the filesystem
+        #   "versionSegment" is the version-specific element both in the
+        #                URL and in the filesystem.
+
         set resourceDir [acs_package_root_dir cookie-consent/www/resources]
-        set cdn         "//cdnjs.cloudflare.com/ajax/libs"
+        set cdn         //cdnjs.cloudflare.com/ajax/libs/cookieconsent2
 
         #
         # If the resources are not available locally, these will be
@@ -328,7 +334,11 @@ namespace eval ::cookieconsent {
             prefix $prefix \
             cssFiles {cookieconsent.min.css} \
             jsFiles  {cookieconsent.min.js} \
-            extraFiles {}
+            extraFiles {} \
+            versionCheckAPI {cdn cdnjs library cookieconsent2 count 5} \
+            vulnerabilityCheck {service snyk library cookieconsent2} \
+            parameterInfo $parameter_info \
+            configuredVersion $version
 
         return $result
     }
